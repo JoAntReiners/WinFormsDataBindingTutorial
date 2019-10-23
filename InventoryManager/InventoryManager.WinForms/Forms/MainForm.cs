@@ -12,7 +12,7 @@ using Newtonsoft.Json;
 using InventoryManager.Data;
 using InventoryManager.WinForms.ViewModels;
 
-namespace InventoryManager.WinForms
+namespace InventoryManager.WinForms.Forms
 {
     public partial class MainForm : Form
     {
@@ -41,6 +41,19 @@ namespace InventoryManager.WinForms
             {
                 ViewModel.World = JsonConvert.DeserializeObject<World>(File.ReadAllText(openFileDialog.FileName));
                 ViewModel.Filename = openFileDialog.FileName;
+            }
+        }
+
+        private void AddPlayerButton_Click(object sender, EventArgs e)
+        {
+            using (AddPlayerForm addPlayerForm = new AddPlayerForm())
+            {
+                if(addPlayerForm.ShowDialog() == DialogResult.OK)
+                {
+
+                    Player player = new Player { Name = addPlayerForm.PlayerName };
+                    ViewModel.Players.Add(player);
+                }
             }
         }
 

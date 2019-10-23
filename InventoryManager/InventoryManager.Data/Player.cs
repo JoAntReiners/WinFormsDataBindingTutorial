@@ -5,6 +5,8 @@ namespace InventoryManager.Data
 {
     public class Player : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public string Name { get; set; }
         
         public int Health { get; set; }
@@ -13,6 +15,11 @@ namespace InventoryManager.Data
 
         public List<Item> Inventory { get; set; }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public Player()
+        {
+            Inventory = new List<Item>();
+        }
+
+        public override string ToString() => Name;
     }
 }
