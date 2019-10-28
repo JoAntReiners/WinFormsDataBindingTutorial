@@ -29,13 +29,12 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.Label FileLabel;
-            this.SelectFileButton = new System.Windows.Forms.Button();
-            this.FileNameTextBox = new System.Windows.Forms.TextBox();
+            this.worldViewModelBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.MainTabControl = new System.Windows.Forms.TabControl();
             this.PlayersTabPage = new System.Windows.Forms.TabPage();
             this.PlayerScoreTextbox = new System.Windows.Forms.TextBox();
+            this.playersBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.PlayerScoreLabel = new System.Windows.Forms.Label();
             this.PlayerHealthTextbox = new System.Windows.Forms.TextBox();
             this.PlayerHealthLabel = new System.Windows.Forms.Label();
@@ -48,45 +47,22 @@
             this.ItemDeleteButton = new System.Windows.Forms.Button();
             this.ItemAddButton = new System.Windows.Forms.Button();
             this.ItemsListBox = new System.Windows.Forms.ListBox();
-            this.worldViewModelBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.playersBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.itemsBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            FileLabel = new System.Windows.Forms.Label();
+            this.MainMenuStrip = new System.Windows.Forms.MenuStrip();
+            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openWorldToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            ((System.ComponentModel.ISupportInitialize)(this.worldViewModelBindingSource)).BeginInit();
             this.MainTabControl.SuspendLayout();
             this.PlayersTabPage.SuspendLayout();
-            this.ItemsTabPage.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.worldViewModelBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.playersBindingSource)).BeginInit();
+            this.ItemsTabPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.itemsBindingSource)).BeginInit();
+            this.MainMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
-            // FileLabel
+            // worldViewModelBindingSource
             // 
-            FileLabel.AutoSize = true;
-            FileLabel.Location = new System.Drawing.Point(12, 9);
-            FileLabel.Name = "FileLabel";
-            FileLabel.Size = new System.Drawing.Size(23, 13);
-            FileLabel.TabIndex = 0;
-            FileLabel.Text = "File";
-            // 
-            // SelectFileButton
-            // 
-            this.SelectFileButton.Location = new System.Drawing.Point(502, 4);
-            this.SelectFileButton.Name = "SelectFileButton";
-            this.SelectFileButton.Size = new System.Drawing.Size(30, 23);
-            this.SelectFileButton.TabIndex = 1;
-            this.SelectFileButton.Text = "...";
-            this.SelectFileButton.UseVisualStyleBackColor = true;
-            this.SelectFileButton.Click += new System.EventHandler(this.SelectFileButton_Click);
-            // 
-            // FileNameTextBox
-            // 
-            this.FileNameTextBox.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.worldViewModelBindingSource, "Filename", true));
-            this.FileNameTextBox.Location = new System.Drawing.Point(41, 5);
-            this.FileNameTextBox.Name = "FileNameTextBox";
-            this.FileNameTextBox.ReadOnly = true;
-            this.FileNameTextBox.Size = new System.Drawing.Size(455, 20);
-            this.FileNameTextBox.TabIndex = 2;
+            this.worldViewModelBindingSource.DataSource = typeof(InventoryManager.WinForms.ViewModels.WorldViewModel);
             // 
             // openFileDialog
             // 
@@ -96,10 +72,10 @@
             // 
             this.MainTabControl.Controls.Add(this.PlayersTabPage);
             this.MainTabControl.Controls.Add(this.ItemsTabPage);
-            this.MainTabControl.Location = new System.Drawing.Point(15, 31);
+            this.MainTabControl.Location = new System.Drawing.Point(15, 27);
             this.MainTabControl.Name = "MainTabControl";
             this.MainTabControl.SelectedIndex = 0;
-            this.MainTabControl.Size = new System.Drawing.Size(517, 387);
+            this.MainTabControl.Size = new System.Drawing.Size(517, 391);
             this.MainTabControl.TabIndex = 3;
             // 
             // PlayersTabPage
@@ -116,7 +92,7 @@
             this.PlayersTabPage.Location = new System.Drawing.Point(4, 22);
             this.PlayersTabPage.Name = "PlayersTabPage";
             this.PlayersTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.PlayersTabPage.Size = new System.Drawing.Size(509, 361);
+            this.PlayersTabPage.Size = new System.Drawing.Size(509, 365);
             this.PlayersTabPage.TabIndex = 0;
             this.PlayersTabPage.Text = "Players";
             this.PlayersTabPage.UseVisualStyleBackColor = true;
@@ -128,6 +104,11 @@
             this.PlayerScoreTextbox.Name = "PlayerScoreTextbox";
             this.PlayerScoreTextbox.Size = new System.Drawing.Size(78, 20);
             this.PlayerScoreTextbox.TabIndex = 8;
+            // 
+            // playersBindingSource
+            // 
+            this.playersBindingSource.DataMember = "Players";
+            this.playersBindingSource.DataSource = this.worldViewModelBindingSource;
             // 
             // PlayerScoreLabel
             // 
@@ -180,6 +161,7 @@
             this.DeletePlayerButton.TabIndex = 2;
             this.DeletePlayerButton.Text = "&Delete";
             this.DeletePlayerButton.UseVisualStyleBackColor = true;
+            this.DeletePlayerButton.Click += new System.EventHandler(this.DeletePlayerButton_Click);
             // 
             // AddPlayerButton
             // 
@@ -201,6 +183,7 @@
             this.PlayersListBox.Size = new System.Drawing.Size(182, 329);
             this.PlayersListBox.TabIndex = 0;
             this.PlayersListBox.ValueMember = "Health";
+            this.PlayersListBox.SelectedIndexChanged += new System.EventHandler(this.PlayersListBox_SelectedIndexChanged);
             // 
             // ItemsTabPage
             // 
@@ -244,49 +227,63 @@
             this.ItemsListBox.TabIndex = 0;
             this.ItemsListBox.ValueMember = "Name";
             // 
-            // worldViewModelBindingSource
-            // 
-            this.worldViewModelBindingSource.DataSource = typeof(InventoryManager.WinForms.ViewModels.WorldViewModel);
-            // 
-            // playersBindingSource
-            // 
-            this.playersBindingSource.DataMember = "Players";
-            this.playersBindingSource.DataSource = this.worldViewModelBindingSource;
-            // 
             // itemsBindingSource
             // 
             this.itemsBindingSource.DataMember = "Items";
             this.itemsBindingSource.DataSource = this.worldViewModelBindingSource;
             // 
+            // MainMenuStrip
+            // 
+            this.MainMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fileToolStripMenuItem});
+            this.MainMenuStrip.Location = new System.Drawing.Point(0, 0);
+            this.MainMenuStrip.Name = "MainMenuStrip";
+            this.MainMenuStrip.Size = new System.Drawing.Size(535, 24);
+            this.MainMenuStrip.TabIndex = 4;
+            this.MainMenuStrip.Text = "menuStrip1";
+            // 
+            // fileToolStripMenuItem
+            // 
+            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.openWorldToolStripMenuItem});
+            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.fileToolStripMenuItem.Text = "&File";
+            // 
+            // openWorldToolStripMenuItem
+            // 
+            this.openWorldToolStripMenuItem.Name = "openWorldToolStripMenuItem";
+            this.openWorldToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
+            this.openWorldToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
+            this.openWorldToolStripMenuItem.Text = "&Open World...";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(560, 430);
+            this.ClientSize = new System.Drawing.Size(535, 420);
             this.Controls.Add(this.MainTabControl);
-            this.Controls.Add(this.FileNameTextBox);
-            this.Controls.Add(this.SelectFileButton);
-            this.Controls.Add(FileLabel);
+            this.Controls.Add(this.MainMenuStrip);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MainMenuStrip = this.MainMenuStrip;
             this.MaximizeBox = false;
             this.Name = "MainForm";
             this.Text = "Inventory Manager";
+            ((System.ComponentModel.ISupportInitialize)(this.worldViewModelBindingSource)).EndInit();
             this.MainTabControl.ResumeLayout(false);
             this.PlayersTabPage.ResumeLayout(false);
             this.PlayersTabPage.PerformLayout();
-            this.ItemsTabPage.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.worldViewModelBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.playersBindingSource)).EndInit();
+            this.ItemsTabPage.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.itemsBindingSource)).EndInit();
+            this.MainMenuStrip.ResumeLayout(false);
+            this.MainMenuStrip.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.Button SelectFileButton;
-        private System.Windows.Forms.TextBox FileNameTextBox;
         private System.Windows.Forms.OpenFileDialog openFileDialog;
         private System.Windows.Forms.TabControl MainTabControl;
         private System.Windows.Forms.TabPage PlayersTabPage;
@@ -306,6 +303,9 @@
         private System.Windows.Forms.BindingSource worldViewModelBindingSource;
         private System.Windows.Forms.BindingSource playersBindingSource;
         private System.Windows.Forms.BindingSource itemsBindingSource;
+        private System.Windows.Forms.MenuStrip MainMenuStrip;
+        private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem openWorldToolStripMenuItem;
     }
 }
 

@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Reflection;
 using System.IO;
 using System.Windows.Forms;
 using Newtonsoft.Json;
@@ -16,10 +17,12 @@ namespace InventoryManager.WinForms.Forms
 {
     public partial class MainForm : Form
     {
+        public static string AssemblyTitle = Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyTitleAttribute>().Title;
+
         private WorldViewModel ViewModel
         {
-          get => mViewModel;
-          set
+            get => mViewModel;
+            set
             {
                 if (mViewModel != value)
                 {
@@ -29,10 +32,21 @@ namespace InventoryManager.WinForms.Forms
             }
         }
 
+        private bool IsWorldLoaded
+        {
+            get => mIsWorldLoaded;
+            set
+            {
+                mIsWorldLoaded = value;
+                MainTabControl.Enabled = mIsWorldLoaded;
+            }
+        }
+
         public MainForm()
         {
             InitializeComponent();
             ViewModel = new WorldViewModel();
+            IsWorldLoaded = false;
         }
 
         private void SelectFileButton_Click(object sender, EventArgs e)
@@ -41,6 +55,7 @@ namespace InventoryManager.WinForms.Forms
             {
                 ViewModel.World = JsonConvert.DeserializeObject<World>(File.ReadAllText(openFileDialog.FileName));
                 ViewModel.Filename = openFileDialog.FileName;
+                IsWorldLoaded = true;
             }
         }
 
@@ -48,7 +63,7 @@ namespace InventoryManager.WinForms.Forms
         {
             using (AddPlayerForm addPlayerForm = new AddPlayerForm())
             {
-                if(addPlayerForm.ShowDialog() == DialogResult.OK)
+                if (addPlayerForm.ShowDialog() == DialogResult.OK)
                 {
 
                     Player player = new Player { Name = addPlayerForm.PlayerName };
@@ -57,6 +72,21 @@ namespace InventoryManager.WinForms.Forms
             }
         }
 
+        private void PlayersListBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            DeletePlayerButton.Enabled = PlayersListBox.SelectedItem != null;
+        }
+
+        private void DeletePlayerButton_Click(object sender, EventArgs e)
+        {
+            if(MessageBox.Show("Delete this player?", AssemblyTitle, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                ViewModel.Players.Remove((Player)PlayersListBox.SelectedItem);
+                PlayersListBox.SelectedItem = ViewModel.Players.FirstOrDefault();
+            }
+        }
+
         private WorldViewModel mViewModel;
+        private bool mIsWorldLoaded;
     }
 }
