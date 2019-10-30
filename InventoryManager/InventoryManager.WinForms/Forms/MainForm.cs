@@ -49,16 +49,6 @@ namespace InventoryManager.WinForms.Forms
             IsWorldLoaded = false;
         }
 
-        private void SelectFileButton_Click(object sender, EventArgs e)
-        {
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                ViewModel.World = JsonConvert.DeserializeObject<World>(File.ReadAllText(openFileDialog.FileName));
-                ViewModel.Filename = openFileDialog.FileName;
-                IsWorldLoaded = true;
-            }
-        }
-
         private void AddPlayerButton_Click(object sender, EventArgs e)
         {
             using (AddPlayerForm addPlayerForm = new AddPlayerForm())
@@ -86,7 +76,64 @@ namespace InventoryManager.WinForms.Forms
             }
         }
 
+        private void ItemAddButton_Click(object sender, EventArgs e)
+        {
+            using(AddItemForm addItemForm = new AddItemForm())
+            {
+                if(addItemForm.ShowDialog() == DialogResult.OK)
+                {
+                    Item item = new Item { Name = addItemForm.ItemName };
+                    ViewModel.Items.Add(item);
+                }
+            }
+        }
+
+        private void ItemsListBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ItemDeleteButton.Enabled = ItemsListBox.SelectedItem != null;
+        }
+
+        private void ItemDeleteButton_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Delete this item?", AssemblyTitle, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                ViewModel.Items.Remove((Item)ItemsListBox.SelectedItem);
+                ItemsListBox.SelectedItem = ViewModel.Items.FirstOrDefault();
+            }
+        }
+
+        #region Main Menu
+
+        private void OpenWorldToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                ViewModel.World = JsonConvert.DeserializeObject<World>(File.ReadAllText(openFileDialog.FileName));
+                ViewModel.Filename = openFileDialog.FileName;
+                IsWorldLoaded = true;
+            }
+        }
+
+        private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        private void SaveToolStripMenuItem_Click(object sender, EventArgs e) => ViewModel.SaveWorld();
+        
+        private void SaveAsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if(SaveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                ViewModel.Filename = SaveFileDialog.FileName;
+                ViewModel.SaveWorld();
+            }
+        }
+
+        #endregion
+
         private WorldViewModel mViewModel;
         private bool mIsWorldLoaded;
+
     }
 }
